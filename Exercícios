@@ -1,0 +1,14 @@
+import java.util.Scanner; // Biblioteca para ler o que o usuário digitar
+
+public class VetorExemplo {
+    public static void main(String[] args) {
+        
+        Scanner sc = new Scanner(System.in); // Criando o "scanner" para entrada de dados
+
+        int[] numeros = new int[5]; // Aqui criamos o vetor com 5 espaços
+
+        // Passo 1: pedir os 5 números
+        for (int i = 0; i < 5; i++) {
+            System.out.print("Digite o número " + (i + 1) + ": ");
+            numeros[i] = sc.nextInt(); // Guarda o número digitado na posição i do vetor
+        }
