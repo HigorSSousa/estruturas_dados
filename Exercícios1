@@ -1,24 +1,16 @@
-import java.util.Scanner; 
+import java.util.Scanner;
 
-public class VetorExemplo {
+public class VetorCurto {
     public static void main(String[] args) {
-        
-        Scanner sc = new Scanner(System.in); 
-
+        Scanner sc = new Scanner(System.in);
         int[] numeros = new int[5];
 
-        // Passo 1: pedir os 5 números
-        for (int i = 0; i < 5; i++) {
-            System.out.print("Digite o número " + (i + 1) + ": ");
-            numeros[i] = sc.nextInt(); // Guarda o número digitado na posição i do vetor
-        }
+        for (int i = 0; i < numeros.length; i++)
+            numeros[i] = sc.nextInt();
 
-        // Passo 2: mostrar os números digitados
-        System.out.println("\nVocê digitou os seguintes números:");
-        for (int i = 0; i < 5; i++) {
-            System.out.println("Posição " + i + " -> " + numeros[i]);
-        }
+        for (int n : numeros)
+            System.out.println(n);
 
-        sc.close(); // Fechar o scanner
+        sc.close();
     }
 }
