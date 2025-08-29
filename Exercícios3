@@ -1,1 +1,15 @@
+import java.util.Scanner;
 
+public class MediaNotas {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        double[] notas = new double[4]; // vetor para armazenar as 4 notas
+        double soma = 0;
+
+        // leitura das notas
+        for (int i = 0; i < 4; i++) {
+            System.out.print("Digite a nota " + (i + 1) + ": ");
+            notas[i] = sc.nextDouble();
+            soma += notas[i];
+        }
