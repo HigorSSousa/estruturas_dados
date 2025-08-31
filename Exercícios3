@@ -12,4 +12,17 @@ public class MediaNotas {
             System.out.print("Digite a nota " + (i + 1) + ": ");
             notas[i] = sc.nextDouble();
             soma += notas[i];
+        } 
+
+        double media = soma / 4;
+
+        System.out.println("\nNotas digitadas:");
+        for (double nota : notas) {
+            System.out.println(nota);
         }
+
+        System.out.println("Média = " + media);
+
+        sc.close();
+    }
+}
