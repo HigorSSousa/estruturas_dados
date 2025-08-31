@@ -1,0 +1,23 @@
+import java.util.Scanner;
+
+public class ConsoantesVetor {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        char[] vetor = new char[10];
+        int cont = 0;
+
+        System.out.println("Digite 10 caracteres:");
+        for (int i = 0; i < vetor.length; i++) {
+            char c = sc.next().toLowerCase().charAt(0);
+            vetor[i] = c;
+            if (Character.isLetter(c) && "aeiou".indexOf(c) == -1) cont++;
+        }
+
+        System.out.println("\nQuantidade de consoantes: " + cont);
+        System.out.print("Consoantes: ");
+        for (char c : vetor)
+            if (Character.isLetter(c) && "aeiou".indexOf(c) == -1) System.out.print(c + " ");
+
+        sc.close();
+    }
+}
