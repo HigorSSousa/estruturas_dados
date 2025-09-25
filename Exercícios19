@@ -1,0 +1,59 @@
+import java.util.Scanner;
+
+public class EnqueteSO {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        String[] opcoes = {
+            "",
+            "Windows Server",
+            "Unix",
+            "Linux",
+            "Netware",
+            "Mac OS",
+            "Outro"
+        };
+
+        int[] votos = new int[7];
+        int totalVotos = 0;
+
+        System.out.println("Enquete: Qual o melhor Sistema Operacional para uso em servidores?");
+        System.out.println("Responda com um número de 1 a 6 ou 0 para encerrar:");
+
+        while (true) {
+            System.out.print("Opção: ");
+            int resposta = sc.nextInt();
+
+            if (resposta == 0) break;
+
+            if (resposta < 0 || resposta > 6) {
+                System.out.println("Valor inválido! Informe um número entre 1 e 6 ou 0 para sair.");
+            } else {
+                votos[resposta]++;
+                totalVotos++;
+            }
+        }
+
+        int indiceVencedor = 1;
+        for (int i = 2; i <= 6; i++) {
+            if (votos[i] > votos[indiceVencedor]) {
+                indiceVencedor = i;
+            }
+        }
+
+        System.out.println("\nSistema Operacional  Votos  %");
+        System.out.println("------------------- ----- ---");
+        for (int i = 1; i <= 6; i++) {
+            int percentual = (int) Math.round((votos[i] * 100.0) / totalVotos);
+            System.out.printf("%-19s %5d %3d%%\n", opcoes[i], votos[i], percentual);
+        }
+        System.out.println("------------------- -----");
+        System.out.println("Total " + totalVotos);
+
+        System.out.println("\nO Sistema Operacional mais votado foi o " + opcoes[indiceVencedor]
+                + ", com " + votos[indiceVencedor] + " votos, correspondendo a "
+                + (int) Math.round((votos[indiceVencedor] * 100.0) / totalVotos) + "%");
+
+        sc.close();
+    }
+}
