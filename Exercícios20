@@ -1,0 +1,54 @@
+import java.util.ArrayList;
+import java.util.Scanner;
+
+public class ProjecaoAbono {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        ArrayList<Double> salarios = new ArrayList<>();
+        ArrayList<Double> abonos = new ArrayList<>();
+
+        System.out.println("Projeção de Gastos com Abono");
+        System.out.println("============================");
+
+        while (true) {
+            System.out.print("Salário: ");
+            double salario = sc.nextDouble();
+            if (salario == 0) break;
+            if (salario < 0) {
+                System.out.println("Salário inválido! Digite um valor positivo ou 0 para encerrar.");
+                continue;
+            }
+            salarios.add(salario);
+        }
+
+        int totalFuncionarios = salarios.size();
+        double totalAbono = 0;
+        int countMinimo = 0;
+        double maiorAbono = 0;
+
+        for (double salario : salarios) {
+            double abono = salario * 0.2;
+            if (abono < 100) {
+                abono = 100;
+                countMinimo++;
+            }
+            abonos.add(abono);
+            totalAbono += abono;
+            if (abono > maiorAbono) {
+                maiorAbono = abono;
+            }
+        }
+
+        System.out.println("\nSalário - Abono");
+        for (int i = 0; i < totalFuncionarios; i++) {
+            System.out.printf("R$ %.2f - R$ %.2f\n", salarios.get(i), abonos.get(i));
+        }
+
+        System.out.println("\nForam processados " + totalFuncionarios + " colaboradores");
+        System.out.printf("Total gasto com abonos: R$ %.2f\n", totalAbono);
+        System.out.println("Valor mínimo pago a " + countMinimo + " colaboradores");
+        System.out.printf("Maior valor de abono pago: R$ %.2f\n", maiorAbono);
+
+        sc.close();
+    }
+}
