@@ -1,0 +1,71 @@
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Scanner;
+
+public class EnqueteJogadores {
+
+    public static double calcularPercentual(int votos, int total) {
+        if (total == 0) return 0.0;
+        return (votos * 100.0) / total;
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        int[] votos = new int[24];
+        int totalVotos = 0;
+
+        System.out.println("Enquete: Quem foi o melhor jogador?");
+        while (true) {
+            System.out.print("Número do jogador (0=fim): ");
+            int numero = sc.nextInt();
+
+            if (numero == 0) break;
+
+            if (numero < 1 || numero > 23) {
+                System.out.println("Informe um valor entre 1 e 23 ou 0 para sair!");
+            } else {
+                votos[numero]++;
+                totalVotos++;
+            }
+        }
+
+        StringBuilder resultado = new StringBuilder();
+        resultado.append("\nResultado da votação:\n\n");
+        resultado.append("Foram computados ").append(totalVotos).append(" votos.\n");
+        resultado.append("Jogador   Votos   %\n");
+
+        int melhorJogador = 0;
+        int maxVotos = 0;
+
+        for (int i = 1; i <= 23; i++) {
+            if (votos[i] > 0) {
+                double percentual = calcularPercentual(votos[i], totalVotos);
+                resultado.append(String.format("%-9d%-8d%.1f%%\n", i, votos[i], percentual));
+
+                if (votos[i] > maxVotos) {
+                    maxVotos = votos[i];
+                    melhorJogador = i;
+                }
+            }
+        }
+
+        if (melhorJogador > 0) {
+            double percMelhor = calcularPercentual(maxVotos, totalVotos);
+            resultado.append("\nO melhor jogador foi o número ").append(melhorJogador)
+                    .append(", com ").append(maxVotos).append(" votos, correspondendo a ")
+                    .append(String.format("%.1f", percMelhor)).append("% do total de votos.\n");
+        }
+
+        System.out.println(resultado);
+
+        try (PrintWriter out = new PrintWriter(new FileWriter("resultado_enquete.txt"))) {
+            out.print(resultado.toString());
+        } catch (IOException e) {
+            System.out.println("Erro ao gravar o arquivo: " + e.getMessage());
+        }
+
+        sc.close();
+    }
+}
