@@ -1,0 +1,36 @@
+import java.util.Scanner;
+
+public class IdadeAltura {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        int[] idades = new int[30];
+        double[] alturas = new double[30];
+        double somaAlturas = 0.0;
+
+        System.out.println("Digite a idade e a altura dos 30 alunos:");
+        for (int i = 0; i < 30; i++) {
+            System.out.print("Aluno " + (i + 1) + " - Idade: ");
+            idades[i] = sc.nextInt();
+
+            System.out.print("Aluno " + (i + 1) + " - Altura (em metros): ");
+            alturas[i] = sc.nextDouble();
+
+            somaAlturas += alturas[i];
+        }
+
+        double mediaAlturas = somaAlturas / 30;
+
+        int contador = 0;
+        for (int i = 0; i < 30; i++) {
+            if (idades[i] > 13 && alturas[i] < mediaAlturas) {
+                contador++;
+            }
+        }
+
+        System.out.println("\nMédia das alturas: " + mediaAlturas);
+        System.out.println("Quantidade de alunos com mais de 13 anos e altura abaixo da média: " + contador);
+
+        sc.close();
+    }
+}

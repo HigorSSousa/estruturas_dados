@@ -1,0 +1,51 @@
+import java.util.Scanner;
+
+public class LevantamentoMouses {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        int[] contadores = new int[4];
+        int totalMouses = 0;
+
+        System.out.println("Registro de mouses - Digite 0 no número do mouse para encerrar.");
+
+        while (true) {
+            System.out.print("Número do mouse: ");
+            int id = sc.nextInt();
+            if (id == 0) break;
+
+            System.out.println("Tipo de defeito:");
+            System.out.println("1- Necessita da esfera");
+            System.out.println("2- Necessita de limpeza");
+            System.out.println("3- Necessita troca do cabo ou conector");
+            System.out.println("4- Quebrado ou inutilizado");
+            System.out.print("Escolha (1-4): ");
+            int defeito = sc.nextInt();
+
+            if (defeito < 1 || defeito > 4) {
+                System.out.println("Opção inválida! Tente novamente.");
+                continue;
+            }
+
+            contadores[defeito - 1]++;
+            totalMouses++;
+        }
+
+        System.out.println("\nQuantidade de mouses: " + totalMouses + "\n");
+        System.out.println("Situação                       Quantidade  Percentual");
+
+        String[] tipos = {
+            "1- Necessita da esfera",
+            "2- Necessita de limpeza",
+            "3- Necessita troca do cabo ou conector",
+            "4- Quebrado ou inutilizado"
+        };
+
+        for (int i = 0; i < 4; i++) {
+            int percentual = (int) Math.round((contadores[i] * 100.0) / totalMouses);
+            System.out.printf("%-30s %10d %9d%%\n", tipos[i], contadores[i], percentual);
+        }
+
+        sc.close();
+    }
+}

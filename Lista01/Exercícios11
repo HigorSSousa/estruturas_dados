@@ -1,0 +1,50 @@
+import java.util.Scanner;
+
+public class VetoresIntercalados3 {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        int[] vetor1 = new int[10];
+        int[] vetor2 = new int[10];
+        int[] vetor3 = new int[10];
+        int[] vetorFinal = new int[30];
+
+        // Leitura do primeiro vetor
+        System.out.println("Digite os 10 elementos do primeiro vetor:");
+        for (int i = 0; i < 10; i++) {
+            System.out.print("Vetor1[" + i + "]: ");
+            vetor1[i] = sc.nextInt();
+        }
+
+        // Leitura do segundo vetor
+        System.out.println("\nDigite os 10 elementos do segundo vetor:");
+        for (int i = 0; i < 10; i++) {
+            System.out.print("Vetor2[" + i + "]: ");
+            vetor2[i] = sc.nextInt();
+        }
+
+        // Leitura do terceiro vetor
+        System.out.println("\nDigite os 10 elementos do terceiro vetor:");
+        for (int i = 0; i < 10; i++) {
+            System.out.print("Vetor3[" + i + "]: ");
+            vetor3[i] = sc.nextInt();
+        }
+
+        // Intercalação dos três vetores
+        int j = 0;
+        for (int i = 0; i < 10; i++) {
+            vetorFinal[j++] = vetor1[i]; // pega do vetor1
+            vetorFinal[j++] = vetor2[i]; // pega do vetor2
+            vetorFinal[j++] = vetor3[i]; // pega do vetor3
+        }
+
+        // Exibição do vetor intercalado
+        System.out.println("\nVetor intercalado (30 elementos):");
+        for (int i = 0; i < vetorFinal.length; i++) {
+            System.out.print(vetorFinal[i] + " ");
+        }
+
+        sc.close();
+    }
+}
+

@@ -1,0 +1,41 @@
+import java.util.Scanner;
+import java.util.ArrayList;
+
+public class NumerosParesImpares {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        
+        int[] numeros = new int[20];
+        ArrayList<Integer> pares = new ArrayList<>();
+        ArrayList<Integer> impares = new ArrayList<>();
+        
+        System.out.println("Digite 20 números inteiros:");
+        for (int i = 0; i < 20; i++) {
+            numeros[i] = sc.nextInt();
+            
+            if (numeros[i] % 2 == 0) {
+                pares.add(numeros[i]);
+            } else {
+                impares.add(numeros[i]);
+            }
+        }
+        
+        System.out.print("Vetor completo: ");
+        for (int n : numeros) {
+            System.out.print(n + " ");
+        }
+        
+        System.out.print("\nVetor PAR: ");
+        for (int p : pares) {
+            System.out.print(p + " ");
+        }
+        
+        System.out.print("\nVetor IMPAR: ");
+        for (int im : impares) {
+            System.out.print(im + " ");
+        }
+        
+        sc.close();
+    }
+}
+
