@@ -1,0 +1,14 @@
+public class Exercicios  {
+    public static void main(String[] args) {
+        int[] numeros = {1, 2, 3, 4, 5};
+        int[] inverso = new int[numeros.length];
+
+        for (int i = 0; i < numeros.length; i++) {
+            inverso[i] = numeros[numeros.length - 1 - i];
+        }
+
+        for (int num : inverso) {
+            System.out.print(num + " ");
+        }
+    }
+}
