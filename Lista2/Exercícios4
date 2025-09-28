@@ -1,0 +1,16 @@
+public class Exercicio {
+    public static void main(String[] args) {
+        int[] numeros = {10, 5, 30, 2, 50};
+        
+        int maior = numeros[0];
+        int menor = numeros[0];
+
+        for (int n : numeros) {
+            if (n > maior) maior = n;
+            if (n < menor) menor = n;
+        }
+
+        System.out.println("Maior: " + maior);
+        System.out.println("Menor: " + menor);
+    }
+}
