@@ -1,0 +1,196 @@
+package br.edu.ifba.vdc.bsi.linkedstackdao.dao;
+
+import br.edu.ifba.vdc.bsi.linkedstackdao.dao.repository.LinkedStack;
+import br.edu.ifba.vdc.bsi.linkedstackdao.dao.repository.Stackable;
+import br.edu.ifba.vdc.bsi.linkedstackdao.model.Car;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.util.*;
+import java.util.stream.Collectors;
+
+public class CarDAOLinkedStack implements CarDAO {
+
+    private Stackable<Car> cars = new LinkedStack<>(20);
+
+    // ---------------------- CRUD ----------------------
+
+    @Override
+    public void addCar(Car car) {
+        if (isParkingFull()) {
+            throw new IllegalStateException("Estacionamento cheio!");
+        }
+        cars.push(car);
+    }
+
+    @Override
+    public Car getCar(String plateLicense) {
+        for (Car c : getAllCars()) {
+            if (c.getPlateLicense().equalsIgnoreCase(plateLicense)) {
+                return c;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public Car[] getAllCars() {
+        List<Car> list = new ArrayList<>();
+        Stackable<Car> temp = new LinkedStack<>(cars.getMaxCapacity());
+
+        while (!cars.isEmpty()) {
+            Car c = cars.pop();
+            list.add(c);
+            temp.push(c);
+        }
+
+        while (!temp.isEmpty()) {
+            cars.push(temp.pop());
+        }
+
+        return list.toArray(new Car[0]);
+    }
+
+    @Override
+    public void updateCar(Car newCar) {
+        Stackable<Car> temp = new LinkedStack<>(cars.getMaxCapacity());
+        boolean updated = false;
+
+        while (!cars.isEmpty()) {
+            Car c = cars.pop();
+            if (c.getPlateLicense().equalsIgnoreCase(newCar.getPlateLicense())) {
+                temp.push(newCar);
+                updated = true;
+            } else {
+                temp.push(c);
+            }
+        }
+
+        while (!temp.isEmpty()) {
+            cars.push(temp.pop());
+        }
+
+        if (!updated) {
+            throw new IllegalArgumentException("Carro não encontrado: " + newCar.getPlateLicense());
+        }
+    }
+
+    @Override
+    public Car deleteCar(String plateLicense) {
+        Stackable<Car> temp = new LinkedStack<>(cars.getMaxCapacity());
+        Car removed = null;
+
+        while (!cars.isEmpty()) {
+            Car c = cars.pop();
+            if (c.getPlateLicense().equalsIgnoreCase(plateLicense)) {
+                removed = c;
+                break;
+            } else {
+                temp.push(c);
+            }
+        }
+
+        while (!temp.isEmpty()) {
+            cars.push(temp.pop());
+        }
+
+        return removed;
+    }
+
+    // ---------------------- CONSULTAS ----------------------
+
+    @Override
+    public Car getCarByLicensePlate(String licensePlate) {
+        return getCar(licensePlate);
+    }
+
+    @Override
+    public Car[] getCarsByMark(String mark) {
+        return Arrays.stream(getAllCars())
+                .filter(c -> c.getMark().equalsIgnoreCase(mark))
+                .toArray(Car[]::new);
+    }
+
+    @Override
+    public Car[] getCarsByModel(String model) {
+        return Arrays.stream(getAllCars())
+                .filter(c -> c.getModel().equalsIgnoreCase(model))
+                .toArray(Car[]::new);
+    }
+
+    @Override
+    public Car[] getCarsByColor(String color) {
+        return Arrays.stream(getAllCars())
+                .filter(c -> c.getColor().equalsIgnoreCase(color))
+                .toArray(Car[]::new);
+    }
+
+    @Override
+    public Car[] getCarsByOwner(String owner) {
+        return Arrays.stream(getAllCars())
+                .filter(c -> c.getOwner().equalsIgnoreCase(owner))
+                .toArray(Car[]::new);
+    }
+
+    @Override
+    public Car[] getCarsByMomentArrival(LocalDateTime initialMoment, LocalDateTime finalMoment) {
+        return Arrays.stream(getAllCars())
+                .filter(c -> !c.getMomentArrival().isBefore(initialMoment)
+                        && !c.getMomentArrival().isAfter(finalMoment))
+                .toArray(Car[]::new);
+    }
+
+    @Override
+    public Car[] getCarsWithLongParking(long thresholdHours) {
+        LocalDateTime now = LocalDateTime.now();
+        return Arrays.stream(getAllCars())
+                .filter(c -> Duration.between(c.getMomentArrival(), now).toHours() >= thresholdHours)
+                .toArray(Car[]::new);
+    }
+
+    // ---------------------- ANÁLISE ----------------------
+
+    @Override
+    public Car getCarByNewestArrival() {
+        return Arrays.stream(getAllCars())
+                .max(Comparator.comparing(Car::getMomentArrival))
+                .orElse(null);
+    }
+
+    @Override
+    public Car getCarByOldestArrival() {
+        return Arrays.stream(getAllCars())
+                .min(Comparator.comparing(Car::getMomentArrival))
+                .orElse(null);
+    }
+
+    @Override
+    public long getAverageArrivalTime() {
+        Car[] all = getAllCars();
+        if (all.length == 0) return 0;
+        long total = 0;
+        LocalDateTime now = LocalDateTime.now();
+        for (Car c : all) {
+            total += Duration.between(c.getMomentArrival(), now).toHours();
+        }
+        return total / all.length;
+    }
+
+    @Override
+    public long getParkingDuration(String plateLicense) {
+        Car c = getCar(plateLicense);
+        if (c == null) return -1;
+        return Duration.between(c.getMomentArrival(), LocalDateTime.now()).toHours();
+    }
+
+    @Override
+    public Car[] getCarsByParkingDuration(long minHours, long maxHours) {
+        LocalDateTime now = LocalDateTime.now();
+        return Arrays.stream(getAllCars())
+                .filter(c -> {
+                    long hours = Duration.between(c.getMomentArrival(), now).toHours();
+                    return hours >= minHours && hours <= maxHours;
+                })
+                .toArray(Car[]::new);
+    }
+
+    
