@@ -1,0 +1,146 @@
+import java.util.NoSuchElementException;
+
+/**
+ * Implementação de uma Pilha Dinâmica Genérica (Linked Stack).
+ * A pilha é implementada utilizando uma estrutura de nós duplamente encadeados.
+ *
+ * @param <T> O tipo de dado que será armazenado na pilha.
+ * @author Nick
+ * @version 1.1
+ * @since 06/10/2025
+ */
+public class LinkedStack<T> implements Stackable<T> { // Assumindo que Stackable também é genérico
+
+    // Aponta para o topo da pilha
+    private DoubleNode<T> topPointer;
+
+    // Indica o número atual de elementos na pilha
+    private int numberElements;
+
+    // Indica o número máximo de elementos que a pilha pode ter
+    private final int maxElements;
+
+    /**
+     * Construtor padrão.
+     * Cria uma pilha com capacidade máxima de 10 elementos.
+     */
+    public LinkedStack() {
+        this(10); // Chama o outro construtor com o valor padrão
+    }
+
+    /**
+     * Construtor que define um tamanho máximo para a pilha.
+     *
+     * @param maxElements O número máximo de elementos que a pilha pode armazenar.
+     */
+    public LinkedStack(int maxElements) {
+        this.topPointer = null;
+        this.numberElements = 0;
+        this.maxElements = maxElements;
+    }
+
+    /**
+     * Verifica se a pilha está vazia.
+     *
+     * @return true se a pilha não contiver elementos, false caso contrário.
+     */
+    @Override
+    public boolean isEmpty() {
+        return numberElements == 0;
+    }
+
+    /**
+     * Verifica se a pilha está cheia.
+     *
+     * @return true se o número de elementos atingiu o máximo, false caso contrário.
+     */
+    @Override
+    public boolean isFull() {
+        return numberElements == maxElements;
+    }
+
+    /**
+     * Retorna o elemento do topo da pilha sem removê-lo.
+     *
+     * @return O elemento do topo da pilha.
+     * @throws NoSuchElementException se a pilha estiver vazia.
+     */
+    @Override
+    public T peek() {
+        if (isEmpty()) {
+            throw new NoSuchElementException("A pilha está vazia!");
+        }
+        return topPointer.getData();
+    }
+
+    /**
+     * Remove e retorna o elemento do topo da pilha.
+     *
+     * @return O elemento que foi removido do topo.
+     * @throws NoSuchElementException se a pilha estiver vazia.
+     */
+    @Override
+    public T pop() {
+        if (isEmpty()) {
+            throw new NoSuchElementException("A pilha está vazia!");
+        }
+        T auxData = topPointer.getData();
+        topPointer = topPointer.getPrevious(); // O novo topo é o anterior
+        
+        // Se a pilha não ficou vazia, remove a referência para o antigo topo
+        if (topPointer != null) {
+            topPointer.setNext(null);
+        }
+        
+        numberElements--;
+        return auxData;
+    }
+
+    /**
+     * Adiciona um novo elemento no topo da pilha.
+     *
+     * @param data O elemento a ser empilhado.
+     * @throws IllegalStateException se a pilha estiver cheia.
+     */
+    @Override
+    public void push(T data) {
+        if (isFull()) {
+            throw new IllegalStateException("A pilha está cheia!");
+        }
+        DoubleNode<T> newNode = new DoubleNode<>(data); // Supondo um construtor que recebe o dado
+        
+        if (!isEmpty()) {
+            topPointer.setNext(newNode);
+            newNode.setPrevious(topPointer);
+        }
+        
+        topPointer = newNode; // O novo nó se torna o topo
+        numberElements++;
+    }
+
+    /**
+     * Gera uma representação em String de todos os elementos da pilha,
+     * do topo para a base.
+     *
+     * @return Uma String formatada com os elementos da pilha.
+     */
+    @Override
+    public String print() {
+        if (isEmpty()) {
+            return "[]";
+        }
+
+        StringBuilder result = new StringBuilder();
+        DoubleNode<T> auxPointer = topPointer;
+        
+        while (auxPointer != null) {
+            result.append(auxPointer.getData());
+            if (auxPointer.getPrevious() != null) {
+                result.append(", ");
+            }
+            auxPointer = auxPointer.getPrevious();
+        }
+        
+        return "[" + result.toString() + "]";
+    }
+}
