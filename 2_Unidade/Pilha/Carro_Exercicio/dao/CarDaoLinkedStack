@@ -192,5 +192,41 @@ public class CarDAOLinkedStack implements CarDAO {
                 })
                 .toArray(Car[]::new);
     }
+// ---------------------- RELATÓRIOS ----------------------
 
-    
+    @Override
+    public String printCars() {
+        StringBuilder sb = new StringBuilder();
+        for (Car c : getAllCars()) {
+            sb.append(c.toString()).append("\n");
+        }
+        return sb.toString();
+    }
+
+    @Override
+    public String getMostPopularMark() {
+        return getMostFrequent(Arrays.stream(getAllCars())
+                .map(Car::getMark)
+                .collect(Collectors.toList()));
+    }
+
+    @Override
+    public String getMostPopularModel() {
+        return getMostFrequent(Arrays.stream(getAllCars())
+                .map(Car::getModel)
+                .collect(Collectors.toList()));
+    }
+
+    @Override
+    public String getMostPopularColor() {
+        return getMostFrequent(Arrays.stream(getAllCars())
+                .map(Car::getColor)
+                .collect(Collectors.toList()));
+    }
+
+    private String getMostFrequent(List<String> list) {
+        if (list.isEmpty()) return null;
+        Map<String, Long> freq = list.stream()
+                .collect(Collectors.groupingBy(s -> s, Collectors.counting()));
+        return Collections.max(freq.entrySet(), Map.Entry.comparingByValue()).getKey();
+    }
