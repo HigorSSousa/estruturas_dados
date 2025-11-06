@@ -230,3 +230,75 @@ public class CarDAOLinkedStack implements CarDAO {
                 .collect(Collectors.groupingBy(s -> s, Collectors.counting()));
         return Collections.max(freq.entrySet(), Map.Entry.comparingByValue()).getKey();
     }
+// ---------------------- GERENCIAMENTO ----------------------
+
+    @Override
+    public boolean isCarInPlaced(String plateLicense) {
+        return getCar(plateLicense) != null;
+    }
+
+    @Override
+    public void clearAllCars() {
+        while (!cars.isEmpty()) {
+            cars.pop();
+        }
+    }
+
+    @Override
+    public void removeCarsByOwner(String owner) {
+        Stackable<Car> temp = new LinkedStack<>(cars.getMaxCapacity());
+        while (!cars.isEmpty()) {
+            Car c = cars.pop();
+            if (!c.getOwner().equalsIgnoreCase(owner)) {
+                temp.push(c);
+            }
+        }
+        while (!temp.isEmpty()) {
+            cars.push(temp.pop());
+        }
+    }
+
+    @Override
+    public void removeCarsOlderThan(LocalDateTime date) {
+        Stackable<Car> temp = new LinkedStack<>(cars.getMaxCapacity());
+        while (!cars.isEmpty()) {
+            Car c = cars.pop();
+            if (!c.getMomentArrival().isBefore(date)) {
+                temp.push(c);
+            }
+        }
+        while (!temp.isEmpty()) {
+            cars.push(temp.pop());
+        }
+    }
+
+    @Override
+    public int getTotalCars() {
+        return cars.size();
+    }
+
+    @Override
+    public int getAvailableSpaces() {
+        return cars.getMaxCapacity() - cars.size();
+    }
+
+    @Override
+    public boolean isParkingFull() {
+        return cars.size() == cars.getMaxCapacity();
+    }
+
+    @Override
+    public boolean isParkingEmpty() {
+        return cars.isEmpty();
+    }
+
+    @Override
+    public int getMaxCapacity() {
+        return cars.getMaxCapacity();
+    }
+
+    @Override
+    public int getOccupancyRate() {
+        return (int) ((cars.size() / (double) cars.getMaxCapacity()) * 100);
+    }
+}
