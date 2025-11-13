@@ -1,87 +1,114 @@
-import java.util.Random;
+// Pseudocódigo Bitonic Sort:
 
-public class BitonicSort {
+FUNCTION BitonicSort(A, low, count, direction)
+    // A: vetor de elementos
+    // low: índice inicial
+    // count: número de elementos
+    // direction: 1 para crescente, 0 para decrescente
 
-    // Função principal que chama o bitonic sort
-    public static void bitonicSort(int[] array, boolean ascending) {
-        int n = array.length;
-        bitonicSortRecursive(array, 0, n, ascending);
-    }
+    IF count > 1 THEN
+        k = count / 2
 
-    // Função recursiva que constrói uma sequência bitônica e a ordena
-    private static void bitonicSortRecursive(int[] array, int low, int count, boolean ascending) {
-        if (count > 1) {
-            int k = count / 2;
+        // Ordena a primeira metade em ordem crescente
+        BitonicSort(A, low, k, 1)
 
-            // Cria duas metades: uma crescente e outra decrescente
-            bitonicSortRecursive(array, low, k, true);
-            bitonicSortRecursive(array, low + k, k, false);
+        // Ordena a segunda metade em ordem decrescente
+        BitonicSort(A, low + k, k, 0)
 
-            // Combina as duas metades de forma ordenada
-            bitonicMerge(array, low, count, ascending);
-        }
-    }
+        // Mescla as duas metades
+        BitonicMerge(A, low, count, direction)
+    END IF
+END FUNCTION
 
-    // Combina (merge) uma sequência bitônica em ordem crescente ou decrescente
-    private static void bitonicMerge(int[] array, int low, int count, boolean ascending) {
-        if (count > 1) {
-            int k = count / 2;
 
-            // Compara e troca elementos conforme a direção (asc/desc)
-            for (int i = low; i < low + k; i++) {
-                if (ascending == (array[i] > array[i + k])) {
-                    // troca se a direção exigir
-                    int temp = array[i];
-                    array[i] = array[i + k];
-                    array[i + k] = temp;
-                }
-            }
+FUNCTION BitonicMerge(A, low, count, direction)
+    IF count > 1 THEN
+        k = count / 2
+        FOR i = low TO (low + k - 1) DO
+            IF (direction = 1 AND A[i] > A[i + k]) OR (direction = 0 AND A[i] < A[i + k]) THEN
+                swap A[i], A[i + k]
+            END IF
+        END FOR
 
-            // Aplica o merge recursivamente em cada metade
-            bitonicMerge(array, low, k, ascending);
-            bitonicMerge(array, low + k, k, ascending);
-        }
-    }
+        BitonicMerge(A, low, k, direction)
+        BitonicMerge(A, low + k, k, direction)
+    END IF
+END FUNCTION
 
-    // Gera um vetor aleatório de inteiros
-    public static int[] generateRandomArray(int size, int maxValue) {
-        Random random = new Random();
-        int[] array = new int[size];
-        for (int i = 0; i < size; i++) {
-            array[i] = random.nextInt(maxValue);
-        }
-        return array;
-    }
 
-    // Exibe o vetor (limitado a um número de elementos)
-    public static void printArray(int[] array, int limit) {
-        for (int i = 0; i < Math.min(array.length, limit); i++) {
-            System.out.print(array[i] + " ");
-        }
-        if (array.length > limit) System.out.print("...");
-        System.out.println();
-    }
+// Função principal
+FUNCTION Main()
+    A = [3, 7, 4, 8, 6, 2, 1, 5]
+    n = tamanho(A)
 
-    // Método principal para testar o Bitonic Sort
-    public static void main(String[] args) {
+    BitonicSort(A, 0, n, 1)     // 1 indica ordenação crescente
 
-        //O tamanho deve ser potência de 2 (2, 4, 8, 16, 32, ...)
-        int[] sizes = {8, 16, 32};
+    PRINT "Vetor ordenado:", A
+END FUNCTION
 
-        for (int size : sizes) {
-            System.out.println("Tamanho do vetor: " + size);
 
-            int[] array = generateRandomArray(size, 100);
 
-            System.out.println("Antes da ordenação:");
-            printArray(array, 16);
+// Passo a passo Bitonic Sort:
 
-            // Ordena em ordem crescente
-            bitonicSort(array, true);
+Dados iniciais:
+ A = [3, 7, 4, 8, 6, 2, 1, 5]
+ Tamanho = 8 (potência de 2 → ideal para Bitonic Sort)
+ Objetivo: ordenar em ordem crescente
 
-            System.out.println("Depois da ordenação:");
-            printArray(array, 16);
-            System.out.println("---------------------------------------");
-        }
-    }
-}
+
+Etapa 1: Divisão Recursiva
+ O vetor é dividido até formar pares (tamanho 1) e começa a ser combinado em sequências bitônicas.
+ [3,7,4,8,6,2,1,5]
+  → Divide em duas metades:
+     [3,7,4,8] (ordem crescente)
+     [6,2,1,5] (ordem decrescente)
+
+
+Etapa 2: Criação das Sequências Bitônicas
+
+ Subvetor [3,7,4,8] (direção crescente):
+  Divide: [3,7] e [4,8]
+  BitonicMerge([3,7,4,8], crescente)
+  Comparar (3,4), (7,8)
+  Nenhuma troca → [3,4,7,8]
+
+ Subvetor [6,2,1,5] (direção decrescente):
+  Divide: [6,2] e [1,5]
+  BitonicMerge([6,2,1,5], decrescente)
+  Comparar (6,1), (2,5)
+  Trocas → [1,6,5,2]
+  BitonicMerge novamente → [6,5,2,1]
+  Resultado: [6,5,2,1]
+
+ Agora temos:
+  Parte crescente: [3,4,7,8]
+  Parte decrescente: [6,5,2,1]
+  Sequência bitônica formada.
+
+
+Etapa 3: Mesclagem (BitonicMerge)
+ BitonicMerge([3,4,7,8,6,5,2,1], crescente)
+
+ Comparar pares:
+   (3,6), (4,5), (7,2), (8,1)
+  Trocas em (7↔2) e (8↔1)
+  Resultado parcial: [3,4,2,1,6,5,7,8]
+
+ BitonicMerge([3,4,2,1], crescente)
+  Comparar (3,2), (4,1)
+  Trocas → [2,1,3,4]
+  BitonicMerge([2,1]) → troca → [1,2]
+  BitonicMerge([3,4]) → sem troca
+  Resultado: [1,2,3,4]
+
+ BitonicMerge([6,5,7,8], crescente)
+  Comparar (6,7), (5,8)
+  Nenhuma troca
+  Resultado: [5,6,7,8]
+
+ Concatenando:
+  [1,2,3,4,5,6,7,8]
+
+
+Resultado final:
+ [1, 2, 3, 4, 5, 6, 7, 8]
